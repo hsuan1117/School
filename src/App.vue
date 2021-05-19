@@ -45,7 +45,10 @@
 			<v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
 			<v-toolbar-title><router-link to="/" style="text-decoration: none;">時間安排工具</router-link></v-toolbar-title>
 			<v-spacer></v-spacer>
-			<v-btn to="/add" icon>
+			<v-btn to="/" icon>
+				<v-icon>mdi-home</v-icon>
+			</v-btn>
+			<v-btn to="/config" icon>
 				<v-icon>mdi-cog</v-icon>
 			</v-btn>
 			<v-btn to="/add" icon>

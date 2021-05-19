@@ -83,7 +83,7 @@ export default {
 		/*ValidationProvider*/
 	},
 	data: () => ({
-		time: new Date(),
+		time: new Date().getHours()+":"+new Date().getSeconds(),
 		modal2: false
 	}),
 	methods: {
