@@ -84,6 +84,7 @@
 									</v-list-item>
 								</v-list-item-group>
 							</v-list>
+							Tasks:
 							<v-divider></v-divider>
 							<v-list dense>
 								<v-list-item-group
@@ -115,12 +116,13 @@
 // @ is an alias to /src
 //let i=0;
 import moment from 'moment';
+import store from "@/store";
 
 export default {
 	name: 'Home',
 	components: {},
 	data: () => ({
-		allData: [{
+		allData: store.state.allData/*[{
 			id: 1,
 			flex: 6,
 			date: new Date(),
@@ -212,7 +214,7 @@ export default {
 					text: '體育課'
 				}
 			]
-		}],
+		}],*/
 	}),
 	methods: {
 		moment
