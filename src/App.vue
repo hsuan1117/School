@@ -51,6 +51,9 @@
 			<v-btn to="/" icon>
 				<v-icon>mdi-home</v-icon>
 			</v-btn>
+			<v-btn to="/cal" icon>
+				<v-icon>mdi-eye</v-icon>
+			</v-btn>
 			<v-btn to="/config" icon>
 				<v-icon>mdi-cog</v-icon>
 			</v-btn>

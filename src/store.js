@@ -49,12 +49,8 @@ const store = new Vuex.Store({
     mutations: {
         addClass(state,payload){
             let i = state.allData.findIndex(item=>{
-                console.log(new Date(item.classDate).getTime())
-                console.log(new Date(payload.classDate).getTime())
-
                 return new Date(item.classDate).getTime()===new Date(payload.classDate).getTime()
             })
-            console.log(i)
             if(i===-1){
                 //找不到，必須新增
                 state.allData.push({
@@ -85,10 +81,17 @@ const store = new Vuex.Store({
                     text: payload.name
                 })
             }
-            state.allClass.push({
-                name:payload.name,
-                tagColor: payload.tagColor
-            })
+            let class_index = state.allData.findIndex(x=>x.name===payload.name)
+
+            if(class_index===-1){
+                state.allClass.push({
+                    name:payload.name,
+                    tagColor: payload.tagColor
+                })
+            }else{
+                state.allClass[class_index].tagColor = payload.tagColor
+            }
+
             state.allData.sort((a,b)=>{
                 return new Date(a.classDate) - new Date(b.classDate);
             })
