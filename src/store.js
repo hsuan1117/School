@@ -1,6 +1,8 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import createPersistedState from "vuex-persistedstate";
+import {v4 as uuidv4} from "uuid";
+//import moment from "moment";
 
 //import SecureLS from "secure-ls";
 //const ls = new SecureLS({ isCompression: false });
@@ -38,22 +40,58 @@ Vue.use(Vuex);
 *
 * */
 
-
 const store = new Vuex.Store({
     state: {
         isLoading: false,
-
-        allData: []
+        allData: [],
+        allClass:[]
     },
     mutations: {
-        Loaded(state) {
-            state.isLoading = !state.isLoading
+        addClass(state,payload){
+            let i = state.allData.findIndex(item=>{
+                console.log(new Date(item.classDate).getTime())
+                console.log(new Date(payload.classDate).getTime())
 
-            // 這樣每執行一次都會設定一次
-            Vue.set(state, 'clicked', false);
-        },
-        add(state, payload) {
-            state.allData.push(payload)
+                return new Date(item.classDate).getTime()===new Date(payload.classDate).getTime()
+            })
+            console.log(i)
+            if(i===-1){
+                //找不到，必須新增
+                state.allData.push({
+                    id: uuidv4(),
+                    classDate: payload.classDate,
+                    flex: payload.flex ?? 6,
+                    show: false,
+                    classes: [{
+                        tagColor: payload.tagColor,
+                        name: payload.name,
+                        time: {
+                            type: payload.time.type,
+                            startTime: new Date(payload.classDate+" "+payload.time.startTime), //Date
+                            endTime: new Date(payload.classDate+" "+payload.time.endTime)
+                        },
+                        text: payload.name
+                    }]
+                })
+            }else{
+                state.allData[i].classes.push({
+                    tagColor: payload.tagColor,
+                    name: payload.name,
+                    time: {
+                        type: payload.time.type,
+                        startTime: new Date(payload.classDate+" "+payload.time.startTime), //Date
+                        endTime: new Date(payload.classDate+" "+payload.time.endTime)
+                    },
+                    text: payload.name
+                })
+            }
+            state.allClass.push({
+                name:payload.name,
+                tagColor: payload.tagColor
+            })
+            state.allData.sort((a,b)=>{
+                return new Date(a.classDate) - new Date(b.classDate);
+            })
         }
     },
     plugins: [createPersistedState({})],

@@ -12,15 +12,30 @@
 							name="課程名稱"
 							rules="required"
 						>
-							<v-text-field
+							<v-combobox
+								v-model="name"
+								:items="allClass.map(x=>x.name)"
+								@change="changeTagColor"
+								cache-items
+
+								hide-no-data
+								label="課程名稱"
+								prepend-icon="mdi-text"
+								required
+
+								:counter="10"
+								:error-messages="errors"
+							></v-combobox>
+							<!--<v-text-field
 								v-model="name"
 								:counter="10"
 								:error-messages="errors"
 								label="課程名稱"
 								prepend-icon="mdi-text"
 								required
-							></v-text-field>
+							></v-text-field>-->
 						</validation-provider>
+
 						<v-menu
 							ref="menu"
 							v-model="menu"
@@ -108,7 +123,90 @@
 								確認
 							</v-btn>
 						</v-menu>
-
+						<v-row>
+						<v-col cols="12" sm="6">
+							<v-dialog
+								ref="dialog2"
+								v-model="dialog2"
+								:return-value.sync="startTime"
+								width="290px"
+							>
+								<template v-slot:activator="{ on, attrs }">
+									<v-text-field
+										v-model="startTime"
+										label="起始時間"
+										prepend-icon="mdi-clock-time-four-outline"
+										readonly
+										v-bind="attrs"
+										v-on="on"
+										:error-messages="errors"
+									></v-text-field>
+								</template>
+								<v-time-picker
+									v-if="dialog2"
+									v-model="startTime"
+									full-width
+								>
+									<v-spacer></v-spacer>
+									<v-btn
+										text
+										color="primary"
+										@click="dialog2 = false"
+									>
+										Cancel
+									</v-btn>
+									<v-btn
+										text
+										color="primary"
+										@click="$refs.dialog2.save(startTime)"
+									>
+										OK
+									</v-btn>
+								</v-time-picker>
+							</v-dialog>
+						</v-col>
+						<v-col cols="12" sm="6">
+							<v-dialog
+								ref="dialog3"
+								v-model="dialog3"
+								:return-value.sync="endTime"
+								width="290px"
+							>
+								<template v-slot:activator="{ on, attrs }">
+									<v-text-field
+										v-model="endTime"
+										label="結束時間"
+										prepend-icon="mdi-clock-time-four-outline"
+										readonly
+										v-bind="attrs"
+										v-on="on"
+										:error-messages="errors"
+									></v-text-field>
+								</template>
+								<v-time-picker
+									v-if="dialog3"
+									v-model="endTime"
+									full-width
+								>
+									<v-spacer></v-spacer>
+									<v-btn
+										text
+										color="primary"
+										@click="dialog3 = false"
+									>
+										Cancel
+									</v-btn>
+									<v-btn
+										text
+										color="primary"
+										@click="$refs.dialog3.save(endTime)"
+									>
+										OK
+									</v-btn>
+								</v-time-picker>
+							</v-dialog>
+						</v-col>
+						</v-row>
 
 						<v-btn
 							class="mr-4"
@@ -123,6 +221,30 @@
 				</validation-observer>
 			</v-col>
 		</v-row>
+		<v-dialog
+			v-model="dialog"
+			max-width="290"
+		>
+			<v-card>
+				<v-card-title class="headline">
+					已新增課程
+				</v-card-title>
+
+				<v-card-text>
+				</v-card-text>
+
+				<v-card-actions>
+					<v-spacer></v-spacer>
+					<v-btn
+						color="green darken-1"
+						text
+						@click="redirect"
+					>
+						OK
+					</v-btn>
+				</v-card-actions>
+			</v-card>
+		</v-dialog>
 	</v-container>
 </template>
 
@@ -134,11 +256,11 @@ import {extend} from 'vee-validate'
 import {required} from 'vee-validate/dist/rules'
 import {ValidationObserver, ValidationProvider} from "vee-validate";
 import store from "@/store";
-import {v4 as uuidv4} from "uuid"
+//import {v4 as uuidv4} from "uuid"
 
 extend('required', {
 	...required,
-	message: '{_field_} 不能是空白的!',
+	message: '必須填入{_field_}!',
 })
 export default {
 	name: 'Add',
@@ -152,27 +274,39 @@ export default {
 		type: 'hex',
 		tagColor: '#FF00FF',
 		types: ['hex'],
+		allClass: store.state.allClass,
+
+		startTime: new Date().getHours()+":"+new Date().getSeconds(), //String
+		endTime  : new Date().getHours()+":"+new Date().getSeconds(),
+
+		dialog : false,
+		dialog2: false,
+		dialog3: false
 	}),
 	methods: {
 		moment,
 		add() {
-			store.commit('add', {
-				id: uuidv4(),
-				tagColor: this.tagColor,
-				name: this.name,
+			store.commit('addClass', {
 				classDate: this.classDate,
 				flex: 6,
-				date: new Date(this.classDate),
-				show: false,
-				classes: [{
-					time: {
-						type: "absolute",
-						startTime: new Date(),
-						endTime: moment(new Date()).add(5, 'hours')
-					},
-					text: this.name
-				}]
+				tagColor: this.tagColor,
+				name: this.name,
+				time: {
+					type: "absolute",
+					startTime: this.startTime,
+					endTime: this.endTime
+				},
+				text: this.name
 			})
+			this.dialog=true
+		},
+		redirect(){
+			this.$router.push('/')
+		},
+		changeTagColor(){
+			let _class = this.allClass.filter(x=>x.name===this.name)
+			console.log(_class)
+			this.tagColor = _class[0].tagColor
 		}
 	},
 	computed: {},

@@ -45,6 +45,9 @@
 			<v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
 			<v-toolbar-title><router-link to="/" style="text-decoration: none;">時間安排工具</router-link></v-toolbar-title>
 			<v-spacer></v-spacer>
+			<v-btn @click="clear" color="red" icon>
+				<v-icon>mdi-autorenew</v-icon>
+			</v-btn>
 			<v-btn to="/" icon>
 				<v-icon>mdi-home</v-icon>
 			</v-btn>
@@ -54,6 +57,7 @@
 			<v-btn to="/add" icon>
 				<v-icon>mdi-plus</v-icon>
 			</v-btn>
+
 		</v-app-bar>
 
 		<!-- Sizes your content based upon application components -->
@@ -83,6 +87,12 @@ export default {
 	components: {},
 	data: () => ({
 		drawer: false
-	})
+	}),
+	methods:{
+		clear(){
+			localStorage.removeItem('vuex')
+			location.reload()
+		}
+	}
 }
 </script>

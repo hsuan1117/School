@@ -15,7 +15,6 @@
 							width="290px"
 						>
 							<template v-slot:activator="{ on, attrs }">
-
 								<v-text-field
 									v-model="time"
 									label="Picker in dialog"

@@ -9,9 +9,11 @@ import store from "./store"
 
 
 Vue.config.productionTip = false
+
 Vue.filter('shortTimeFormat', function (daraStr, pattern = 'HH:mm') {
   return moment(daraStr).format(pattern)
 })
+
 Vue.component(ValidationObserver.name,ValidationObserver)
 Vue.component(ValidationProvider.name,ValidationProvider)
 new Vue({
