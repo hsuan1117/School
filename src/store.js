@@ -96,6 +96,32 @@ const store = new Vuex.Store({
             state.allData.sort((a,b)=>{
                 return new Date(a.classDate) - new Date(b.classDate);
             })
+        },
+        addTask(state,payload){
+            let i = state.allData.findIndex(item=>{
+                return new Date(item.classDate).getTime()===new Date(payload.taskDate).getTime()
+            })
+            if(i===-1){
+                //找不到，必須新增
+                state.allData.push({
+                    id: uuidv4(),
+                    classDate: payload.taskDate,
+                    flex: payload.flex ?? 6,
+                    show: false,
+                    classes: [],
+                    tasks:[{
+                        done: false,
+                        text: payload.task,
+                        time: payload.taskDate
+                    }]
+                })
+            }else{
+                state.allData[i].tasks.push({
+                    done: false,
+                    text: payload.task,
+                    time: payload.taskDate
+                })
+            }
         }
     },
     plugins: [createPersistedState({})],

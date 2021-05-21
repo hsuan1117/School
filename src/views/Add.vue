@@ -230,24 +230,74 @@
 			</v-tab-item>
 
 			<v-tab-item tabindex="2">
+				<v-menu
+					ref="menu"
+					v-model="menu"
+					:close-on-content-click="false"
+					:return-value.sync="taskDate"
+					transition="scale-transition"
+					offset-y
+					min-width="auto"
+				>
+					<template v-slot:activator="{ on, attrs }">
+						<v-text-field
+							v-model="taskDate"
+							label="日期"
+							prepend-icon="mdi-calendar"
+							readonly
+							v-bind="attrs"
+							v-on="on"
+							required
+						></v-text-field>
+					</template>
+					<v-date-picker
+						v-model="taskDate"
+						no-title
+						scrollable
+					>
+						<v-spacer></v-spacer>
+						<v-btn
+							text
+							color="primary"
+							@click="menu = false"
+						>
+							取消
+						</v-btn>
+						<v-btn
+							text
+							color="primary"
+							@click="$refs.menu.save(taskDate)"
+						>
+							確認
+						</v-btn>
+					</v-date-picker>
+				</v-menu>
 				<v-text-field
 					v-model="newTask"
-					label="What are you working on?"
+					label="TODO名稱"
 					solo
-					@keydown.enter="create"
+					@keydown.enter="addTask"
 				>
 					<template v-slot:append>
 						<v-fade-transition>
 							<v-icon
 								v-if="newTask"
-								@click="create"
+								@click="addTask"
+								color="success"
 							>
-								add_circle
+								mdi-check
 							</v-icon>
 						</v-fade-transition>
 					</template>
 				</v-text-field>
-
+				<v-btn
+					class="mr-4"
+					type="submit"
+					:disabled="invalid"
+					@click="addTask"
+				>
+					Add
+				</v-btn>
 			</v-tab-item>
 		</v-tabs>
 
@@ -257,7 +307,7 @@
 		>
 			<v-card>
 				<v-card-title class="headline">
-					已新增課程
+					已新增
 				</v-card-title>
 
 				<v-card-text>
@@ -306,6 +356,9 @@ export default {
 		types: ['hex'],
 		allClass: store.state.allClass,
 
+		taskDate: moment(new Date()).format("yyyy-MM-DD"),
+		newTask: "",
+
 		startTime: moment(new Date()).format("HH:mm"), //String
 		endTime: moment(new Date()).add(50, 'minutes').format("HH:mm"),
 
@@ -327,6 +380,14 @@ export default {
 					endTime: this.endTime
 				},
 				text: this.name
+			})
+			this.dialog = true
+		},
+		addTask(){
+			store.commit('addTask', {
+				taskDate: this.taskDate,
+				flex: 6,
+				task: this.newTask
 			})
 			this.dialog = true
 		},

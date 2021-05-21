@@ -1,10 +1,11 @@
 <template>
 	<v-container fluid>
 		<v-row dense class="col-auto">
-			<v-col v-for="(day) in allData" :key="day.id">
+			<v-col v-for="(day,dayIndex) in allData" :key="day.id">
 				<v-card
 					class="mx-auto col-8"
 					max-width="400"
+					:day="dayIndex"
 				>
 					<!--<v-img
 						:src="day.image || 'https://source.unsplash.com/random/300x200'"
@@ -109,8 +110,8 @@
 							<h2 class="display-1 success--text pl-4">
 								Tasks:&nbsp;
 								<v-fade-transition leave-absolute>
-						<span :key="`tasks-${tasks.length}`">
-							{{ tasks.length }}
+						<span :key="`tasks-${day.tasks.length}`">
+							{{ day.tasks.length }}
 						</span>
 								</v-fade-transition>
 							</h2>
@@ -141,13 +142,13 @@
 
 							<v-divider class="mb-4"></v-divider>
 
-							<v-card v-if="tasks.length > 0">
+							<v-card v-if="day.tasks.length > 0">
 								<v-slide-y-transition
 									class="py-0"
 									group
 									tag="v-list"
 								>
-									<template v-for="(task, i) in tasks">
+									<template v-for="(task, i) in day.tasks">
 										<v-divider
 											v-if="i !== 0"
 											:key="`${i}-divider`"
@@ -202,6 +203,7 @@ export default {
 	components: {},
 	data: () => ({
 		allData: store.state.allData,
+		dayIndex: 0,
 		tasks: store.state.allData.map(x=>x.tasks).flat()
 	}),
 	methods: {
@@ -209,13 +211,13 @@ export default {
 	},
 	computed:{
 		completedTasks () {
-			return this.tasks.filter(task => task.done).length
+			return this.allData[this.dayIndex].tasks.filter(task => task.done).length
 		},
 		progress () {
-			return this.completedTasks / this.tasks.length * 100
+			return this.completedTasks / this.allData[this.dayIndex].tasks.length * 100
 		},
 		remainingTasks () {
-			return this.tasks.length - this.completedTasks
+			return this.allData[this.dayIndex].tasks.length - this.completedTasks
 		},
 	}
 }

@@ -23,20 +23,36 @@ export default {
 	name: 'Cal',
 	components: {},
 	data: () => ({
-		allData : store.state.allData
+		/*allData : store.state.allData
 			.map(x=>x.classes).flat()
 			.map(x=> ({
 				name:x.name,
 				start: moment(new Date(x.time.startTime)).format("yyyy-MM-DD HH:mm"),
 				end: moment(new Date(x.time.endTime)).format("yyyy-MM-DD HH:mm"),
 				color: x.tagColor
-			}))
+			}))*/
 	}),
 	methods: {
 		moment
 	},
 	mounted() {
-		console.log(store.state.allData.map(x=>x.classes).flat().map(x=> ({name:x.name,start: moment(new Date(x.time.startTime)).format("yyyy-MM-DD HH:mm"),end: moment(new Date(x.time.endTime)).format("yyyy-MM-DD HH:mm")})))
+		console.log(
+			store.state.allData
+			.map(x=>(x.classes)).flat()
+			.map(x=> ({
+				name:x.name,
+				start: moment(new Date(x.time.startTime)).format("yyyy-MM-DD HH:mm"),
+				end: moment(new Date(x.time.endTime)).format("yyyy-MM-DD HH:mm")
+			})).concat(
+				store.state.allData
+					.map(x=>(x.tasks)).flat()
+					.filter(x=>!x.done)
+					.map(x=> ({
+						name:x.text,
+						start: moment(new Date(x.taskDate)).format("yyyy-MM-DD HH:mm")
+					}))
+			)
+		)
 	}
 }
 </script>
