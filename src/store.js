@@ -67,7 +67,8 @@ const store = new Vuex.Store({
                             endTime: new Date(payload.classDate+" "+payload.time.endTime)
                         },
                         text: payload.name
-                    }]
+                    }],
+                    tasks:[]
                 })
             }else{
                 state.allData[i].classes.push({

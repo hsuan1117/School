@@ -1,6 +1,6 @@
 <template>
 	<v-container fluid>
-		<v-row dense class="col-auto" >
+		<v-row dense class="col-auto">
 			<v-col v-for="(day) in allData" :key="day.id">
 				<v-card
 					class="mx-auto col-8"
@@ -16,7 +16,8 @@
 					</v-card-title>
 
 					<v-card-subtitle>
-						{{ new Date(day.classDate).toLocaleString('zh-TW', {weekday: "short"}) }} ({{day.classes.length}}堂課)
+						{{ new Date(day.classDate).toLocaleString('zh-TW', {weekday: "short"}) }}
+						({{ day.classes.length }}堂課)
 					</v-card-subtitle>
 
 					<v-card-actions>
@@ -84,9 +85,9 @@
 									</v-list-item>
 								</v-list-item-group>
 							</v-list>
-							Tasks:
-							<v-divider></v-divider>
-							<v-list dense>
+
+							<v-divider class="ma-3"></v-divider>
+							<!--<v-list dense>
 								<v-list-item-group
 									disabled=""
 									color="primary"
@@ -103,7 +104,85 @@
 										<v-list-item-title>{{ item.text }}</v-list-item-title>
 									</v-list-item>
 								</v-list-item-group>
-							</v-list>
+							</v-list>-->
+
+							<h2 class="display-1 success--text pl-4">
+								Tasks:&nbsp;
+								<v-fade-transition leave-absolute>
+						<span :key="`tasks-${tasks.length}`">
+							{{ tasks.length }}
+						</span>
+								</v-fade-transition>
+							</h2>
+
+							<v-divider class="mt-4"></v-divider>
+
+							<v-row
+								class="my-1"
+								align="center"
+							>
+								<strong class="mx-4 info--text text--darken-2">
+									Remaining: {{ remainingTasks }}
+								</strong>
+
+								<v-divider vertical></v-divider>
+
+								<strong class="mx-4 success--text text--darken-2">
+									Completed: {{ completedTasks }}
+								</strong>
+
+								<v-spacer></v-spacer>
+
+								<v-progress-circular
+									:value="progress"
+									class="mr-2"
+								></v-progress-circular>
+							</v-row>
+
+							<v-divider class="mb-4"></v-divider>
+
+							<v-card v-if="tasks.length > 0">
+								<v-slide-y-transition
+									class="py-0"
+									group
+									tag="v-list"
+								>
+									<template v-for="(task, i) in tasks">
+										<v-divider
+											v-if="i !== 0"
+											:key="`${i}-divider`"
+										></v-divider>
+
+										<v-list-item :key="`${i}-${task.text}`">
+											<v-list-item-action>
+												<v-checkbox
+													v-model="task.done"
+													:color="task.done && 'grey' || 'primary'"
+												>
+													<template v-slot:label>
+														<div
+															:class="task.done && 'grey--text' || 'primary--text'"
+															class="ml-4"
+															v-text="task.text"
+														></div>
+													</template>
+												</v-checkbox>
+											</v-list-item-action>
+
+											<v-spacer></v-spacer>
+
+											<v-scroll-x-transition>
+												<v-icon
+													v-if="task.done"
+													color="success"
+												>
+													mdi-check
+												</v-icon>
+											</v-scroll-x-transition>
+										</v-list-item>
+									</template>
+								</v-slide-y-transition>
+							</v-card>
 						</div>
 					</v-expand-transition>
 				</v-card>
@@ -122,102 +201,22 @@ export default {
 	name: 'Home',
 	components: {},
 	data: () => ({
-		allData: store.state.allData/*[{
-			id: 1,
-			flex: 6,
-			date: new Date(),
-			show: false,
-			classes: [
-				{
-					time: {
-						type: "absolute",
-						startTime: new Date(),
-						endTime: moment(new Date()).add(5, 'hours')
-					},
-					text: '國防課'
-				},
-				{
-					time: {
-						type: "absolute",
-						startTime: new Date(),
-						endTime: moment(new Date()).add(5, 'hours')
-					},
-					text: '體育課'
-				}
-			]
-		}, {
-			id: 2,
-			flex: 6,
-			date: new Date(),
-			show: false,
-			classes: [
-				{
-					time: {
-						type: "absolute",
-						startTime: new Date(),
-						endTime: moment(new Date()).add(5, 'hours')
-					},
-					text: '體育課'
-				},
-				{
-					time: {
-						type: "absolute",
-						startTime: new Date(),
-						endTime: moment(new Date()).add(5, 'hours')
-					},
-					text: '體育課'
-				}
-			]
-		}, {
-			id: 3,
-			flex: 6,
-			date: new Date(),
-			show: false,
-			classes: [
-				{
-					time: {
-						type: "absolute",
-						startTime: new Date(),
-						endTime: moment(new Date()).add(5, 'hours')
-					},
-					text: '體育課'
-				},
-				{
-					time: {
-						type: "absolute",
-						startTime: new Date(),
-						endTime: moment(new Date()).add(5, 'hours')
-					},
-					text: '體育課'
-				}
-			]
-		}, {
-			id: 4,
-			flex: 6,
-			date: new Date(),
-			show: false,
-			classes: [
-				{
-					time: {
-						type: "absolute",
-						startTime: new Date(),
-						endTime: moment(new Date()).add(5, 'hours')
-					},
-					text: '體育課'
-				},
-				{
-					time: {
-						type: "absolute",
-						startTime: new Date(),
-						endTime: moment(new Date()).add(5, 'hours')
-					},
-					text: '體育課'
-				}
-			]
-		}],*/
+		allData: store.state.allData,
+		tasks: store.state.allData.map(x=>x.tasks).flat()
 	}),
 	methods: {
 		moment
+	},
+	computed:{
+		completedTasks () {
+			return this.tasks.filter(task => task.done).length
+		},
+		progress () {
+			return this.completedTasks / this.tasks.length * 100
+		},
+		remainingTasks () {
+			return this.tasks.length - this.completedTasks
+		},
 	}
 }
 </script>

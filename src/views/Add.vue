@@ -230,7 +230,24 @@
 			</v-tab-item>
 
 			<v-tab-item tabindex="2">
-				尚未完成
+				<v-text-field
+					v-model="newTask"
+					label="What are you working on?"
+					solo
+					@keydown.enter="create"
+				>
+					<template v-slot:append>
+						<v-fade-transition>
+							<v-icon
+								v-if="newTask"
+								@click="create"
+							>
+								add_circle
+							</v-icon>
+						</v-fade-transition>
+					</template>
+				</v-text-field>
+
 			</v-tab-item>
 		</v-tabs>
 
@@ -283,14 +300,14 @@ export default {
 	},
 	data: () => ({
 		name: "",
-		classDate: "",
+		classDate: moment(new Date()).format("yyyy-MM-DD"),
 		type: 'hex',
 		tagColor: '#FF00FF',
 		types: ['hex'],
 		allClass: store.state.allClass,
 
-		startTime: new Date().getHours() + ":" + new Date().getSeconds(), //String
-		endTime: new Date().getHours() + ":" + new Date().getSeconds(),
+		startTime: moment(new Date()).format("HH:mm"), //String
+		endTime: moment(new Date()).add(50, 'minutes').format("HH:mm"),
 
 		dialog: false,
 		dialog2: false,
