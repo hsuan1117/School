@@ -122,6 +122,9 @@ const store = new Vuex.Store({
                     time: payload.taskDate
                 })
             }
+        },
+        taskStatus(state,payload){
+            state.allData[payload.dayIndex].tasks[payload.taskIndex].done = !state.allData[payload.dayIndex].tasks[payload.taskIndex].done
         }
     },
     plugins: [createPersistedState({})],

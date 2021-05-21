@@ -158,6 +158,7 @@
 											<v-list-item-action>
 												<v-checkbox
 													v-model="task.done"
+													@click="changeStatus(i)"
 													:color="task.done && 'grey' || 'primary'"
 												>
 													<template v-slot:label>
@@ -207,7 +208,14 @@ export default {
 		tasks: store.state.allData.map(x=>x.tasks).flat()
 	}),
 	methods: {
-		moment
+		moment,
+		changeStatus(taskIndex){
+			store.commit('taskStatus', {
+				taskIndex,
+				dayIndex: this.dayIndex
+			})
+			console.log(this.dayIndex+" "+taskIndex)
+		}
 	},
 	computed:{
 		completedTasks () {
