@@ -349,6 +349,10 @@ export default {
 		ValidationProvider
 	},
 	data: () => ({
+		errors:[],
+		colorMenu:false,
+		menu:false,
+		invalid:false,
 		name: "",
 		classDate: moment(new Date()).format("yyyy-MM-DD"),
 		type: 'hex',
@@ -397,7 +401,9 @@ export default {
 		changeTagColor() {
 			let _class = this.allClass.filter(x => x.name === this.name)
 			console.log(_class)
-			this.tagColor = _class[0].tagColor
+			if(_class.length){
+				this.tagColor = _class[0].tagColor
+			}
 		}
 	},
 	computed: {},

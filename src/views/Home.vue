@@ -107,8 +107,8 @@
 								</v-list-item-group>
 							</v-list>-->
 
-							<h2 class="display-1 success--text pl-4">
-								Tasks:&nbsp;
+							<h2 class="display-0 success--text pl-1">
+								TODO:&nbsp;
 								<v-fade-transition leave-absolute>
 						<span :key="`tasks-${day.tasks.length}`">
 							{{ day.tasks.length }}
@@ -116,20 +116,18 @@
 								</v-fade-transition>
 							</h2>
 
-							<v-divider class="mt-4"></v-divider>
-
 							<v-row
 								class="my-1"
 								align="center"
 							>
 								<strong class="mx-4 info--text text--darken-2">
-									Remaining: {{ remainingTasks }}
+									剩下: {{ remainingTasks }}
 								</strong>
 
 								<v-divider vertical></v-divider>
 
 								<strong class="mx-4 success--text text--darken-2">
-									Completed: {{ completedTasks }}
+									完成: {{ completedTasks }}
 								</strong>
 
 								<v-spacer></v-spacer>
@@ -158,7 +156,7 @@
 											<v-list-item-action>
 												<v-checkbox
 													v-model="task.done"
-													@click="changeStatus(i)"
+													@change="changeStatus(i)"
 													:color="task.done && 'grey' || 'primary'"
 												>
 													<template v-slot:label>
@@ -198,14 +196,15 @@
 //let i=0;
 import moment from 'moment';
 import store from "@/store";
-
 export default {
 	name: 'Home',
-	components: {},
+	components: {
+	},
 	data: () => ({
 		allData: store.state.allData,
 		dayIndex: 0,
-		tasks: store.state.allData.map(x=>x.tasks).flat()
+		tasks: store.state.allData.map(x=>x.tasks).flat(),
+		errors:[]
 	}),
 	methods: {
 		moment,
@@ -214,6 +213,8 @@ export default {
 				taskIndex,
 				dayIndex: this.dayIndex
 			})
+			this.allData= store.state.allData
+			this.tasks  = store.state.allData.map(x=>x.tasks).flat();
 			console.log(this.dayIndex+" "+taskIndex)
 		}
 	},
