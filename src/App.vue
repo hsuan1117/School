@@ -98,6 +98,9 @@ export default {
 			localStorage.removeItem('vuex')
 			location.reload()
 		}
+	},
+	mounted() {
+
 	}
 }
 </script>
