@@ -196,9 +196,11 @@
 //let i=0;
 import moment from 'moment';
 import store from "@/store";
+
 export default {
 	name: 'Home',
 	components: {
+
 	},
 	data: () => ({
 		allData: store.state.allData,

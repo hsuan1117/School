@@ -76,6 +76,7 @@
 
 		<v-footer app>
 			<!-- -->
+			Version: {{version}}
 		</v-footer>
 	</v-app>
 </template>
@@ -89,7 +90,8 @@ export default {
 	name: 'App',
 	components: {},
 	data: () => ({
-		drawer: false
+		drawer: false,
+		version: process.env.PACKAGE_VERSION
 	}),
 	methods:{
 		clear(){
