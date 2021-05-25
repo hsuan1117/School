@@ -60,6 +60,13 @@
 				</validation-observer>
 			</v-col>
 		</v-row>
+		<v-row>
+			<v-col>
+				<v-btn @click="showConfig">
+					Export Config Strings
+				</v-btn>
+			</v-col>
+		</v-row>
 	</v-container>
 </template>
 
@@ -70,6 +77,7 @@ import moment from 'moment';
 import {extend} from 'vee-validate'
 import {required} from 'vee-validate/dist/rules'
 import {ValidationObserver, /*ValidationProvider*/} from "vee-validate";
+import store from "@/store"
 
 extend('required', {
 	...required,
@@ -86,7 +94,10 @@ export default {
 		modal2: false
 	}),
 	methods: {
-		moment
+		moment,
+		showConfig(){
+			window.alert(JSON.stringify(store.state))
+		}
 	}
 }
 </script>
